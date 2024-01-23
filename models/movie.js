@@ -48,7 +48,7 @@ const movieSchema = new mongoose.Schema({
     required: [true, 'незаполнено поле owner'],
   },
   movieId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     required: [true, 'незаполнено поле movieId'],
   },
   nameRU: {

@@ -4,8 +4,14 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequest = require('../errors/BadRequest');
 const EmailError = require('../errors/EmailError');
+const {
+  badRequest,
+  emailErrorUser,
+  notFoundErrorUser,
+} = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET_DEV } = require('../utils/config');
 
 module.exports.createUsers = (req, res, next) => {
   const { name, email } = req.body;
@@ -14,14 +20,17 @@ module.exports.createUsers = (req, res, next) => {
       User.create({
         name, email, password: hash,
       })
+        .catch((err) => {
+          next(err);
+        })
         .then(() => res.status(201).send({
           name, email,
         }))
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            next(new BadRequest('Переданы некорректные данные при создании пользователя.'));
+            next(new BadRequest(badRequest));
           } else if (err.code === 11000) {
-            next(new EmailError('Пользователь с указанным почтой уже существует'));
+            next(new EmailError(emailErrorUser));
           } else {
             next(err);
           }
@@ -41,11 +50,11 @@ module.exports.updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        next(new NotFoundError('Пользователь по указанному _id не найден.'));
-        return;
-      }
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new BadRequest('Переданы некорректные данные '));
+        next(new NotFoundError(notFoundErrorUser));
+      } else if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new BadRequest(badRequest));
+      } else if (err.code === 11000) {
+        next(new EmailError(emailErrorUser));
       } else {
         next(err);
       }
@@ -53,12 +62,13 @@ module.exports.updateUser = (req, res, next) => {
 };
 
 module.exports.login = (req, res, next) => {
+  console.log(badRequest);
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEV,
         { expiresIn: '7d' },
       );
       res
@@ -82,7 +92,7 @@ module.exports.getActiveUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        next(new NotFoundError('Пользователь по указанному _id не найден.'));
+        next(new NotFoundError(notFoundErrorUser));
       } else {
         next(err);
       }
