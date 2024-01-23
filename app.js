@@ -10,11 +10,11 @@ const errorHandler = require('./middlewares/error-handler');
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('./middlewares/cors');
-const limiter = require('./utils/limiter')
+const limiter = require('./utils/limiter');
 
 const { PORT, DB } = process.env;
 const { login, createUsers } = require('./controllers/users');
-const router = require('./routes/index')
+const router = require('./routes/index');
 
 const app = express();
 app.use(cors);
@@ -22,16 +22,16 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(express.json());
 app.use(requestLogger);
-app.use(limiter)
+app.use(limiter);
 
 app.post('/signup', createUserValidation, createUsers);
 app.post('/signin', loginValidation, login);
 app.use(auth);
 app.use(router);
-app.post('/signout', (req, res, next)=> {
+app.post('/signout', (req, res, next) => {
   res.clearCookie('jwt');
   next();
-})
+});
 
 app.use(errorLogger);
 app.use('*', (req, res, next) => {

@@ -6,5 +6,5 @@
 Адрес репозитория: https://github.com/MaksimBelokopitov/movies-explorer-api
 ## Ссылки на проект
 
-IP-адрес 158.160.79.236
+IP-адрес 158.160.27.232
 https://api.moviebox.nomoredomainsmonster.ru'

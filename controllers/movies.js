@@ -57,8 +57,6 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .orFail(new Error('NotValidId'))
     .then((movie) => {
-      console.log(movie.owner.toString());
-      console.log(req.user._id);
       if (req.user._id !== movie.owner.toString()) {
         next(new UserRulesErrors('Нельзя удалять чужие фильмы.'));
       } else {
