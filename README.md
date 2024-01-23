@@ -7,4 +7,4 @@
 ## Ссылки на проект
 
 IP-адрес 158.160.27.232
-https://api.moviebox.nomoredomainsmonster.ru'
+https://api.movieboxs.nomoredomainsmonster.ru
