@@ -18,8 +18,8 @@ const { MONGO_DB } = require('./utils/config');
 const app = express();
 const options = {
   origin: [
-    'http://localhost:порт',
-    'https://ВАШ ДОМЕН С ДОКУМЕНТА'
+    'http://localhost:3000',
+    'https://api.movieboxs.nomoredomainsmonster.ru'
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
