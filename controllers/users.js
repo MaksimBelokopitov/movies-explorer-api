@@ -20,9 +20,6 @@ module.exports.createUsers = (req, res, next) => {
       User.create({
         name, email, password: hash,
       })
-        .catch((err) => {
-          next(err);
-        })
         .then(() => res.status(201).send({
           name, email,
         }))
@@ -35,7 +32,10 @@ module.exports.createUsers = (req, res, next) => {
             next(err);
           }
         });
-    });
+    })
+    .catch((err) => {
+      next(err);
+    })
 };
 
 module.exports.updateUser = (req, res, next) => {
