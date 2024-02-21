@@ -7,7 +7,7 @@ const { errors } = require('celebrate');
 const errorHandler = require('./middlewares/error-handler');
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const cors = require('./middlewares/cors');
+const cors = require('cors');
 const limiter = require('./utils/limiter');
 const router = require('./routes/index');
 
@@ -16,7 +16,18 @@ const { pageNotFound } = require('./utils/constants');
 const { MONGO_DB } = require('./utils/config');
 
 const app = express();
-app.use(cors);
+const options = {
+  origin: [
+    'http://localhost:порт',
+    'https://ВАШ ДОМЕН С ДОКУМЕНТА'
+  ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+  credentials: true,
+};
+app.use(cors(options));
 app.use(cookieParser());
 app.use(helmet());
 app.use(express.json());
