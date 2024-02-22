@@ -62,6 +62,7 @@ module.exports.updateUser = (req, res, next) => {
 };
 
 module.exports.login = (req, res, next) => {
+
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -74,7 +75,8 @@ module.exports.login = (req, res, next) => {
         .cookie('jwt', token, {
           maxAge: 3600000,
           httpOnly: true,
-          sameSite: "none",
+          sameSite: 'none',
+          secure: true
         })
         .send(user._id);
     })
